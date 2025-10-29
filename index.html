@@ -21,7 +21,7 @@
 
         .container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -149,6 +149,7 @@
         }
 
         #map {
+            min-height: 300px;
             height: 100%;
             width: 100%;
         }
@@ -454,24 +455,18 @@
         let filteredProjects = [...projects];
 
         function initMap() {
-            const isMobile = window.innerWidth <= 768;
-            
-            if (isMobile) {
-                // Wait for mobile flex layout to settle before initializing map
-                setTimeout(function() {
-                    initializeMap();
-                }, 400);
-            } else {
-                initializeMap();
-            }
+            initializeMap();
         }
 
         function initializeMap() {
+            const isMobile = window.innerWidth <= 768;
+            
             map = L.map('map', {
                 tap: true,
                 touchZoom: true,
-                dragging: true
-            }).setView([4.2105, 101.5758], 7); 
+                dragging: true,
+                maxZoom: isMobile ? 10 : 18
+            }).setView([4.2105, 101.5758], 6); 
 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
@@ -495,7 +490,7 @@
             // Ensure map renders correctly after initialization
             setTimeout(function() {
                 map.invalidateSize();
-            }, 100);
+            }, 800);
         }
 
         function addMarkersToMap(projectList) {
@@ -504,7 +499,10 @@
             }
             
             window.markerClusterGroup = L.markerClusterGroup({
-                maxClusterRadius: 400
+                maxClusterRadius: 400,
+                disableClusteringAtZoom: 9,
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false
             });
 
             const locationFilter = document.getElementById('locationFilter').value;
@@ -630,7 +628,9 @@
         document.getElementById('analysisFilter').addEventListener('change', applyFilters);
         document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
-        window.onload = initMap;
+        window.onload = () => {
+            setTimeout(initMap, 600);
+        };
         
         window.addEventListener('resize', function() {
             if (map) {
