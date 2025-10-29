@@ -478,6 +478,9 @@
             addMarkersToMap(projects);
             populateFilters();
             updateResults();
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
         }
 
         function addMarkersToMap(projectList) {
