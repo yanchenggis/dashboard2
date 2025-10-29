@@ -21,7 +21,7 @@
 
         .container {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .sidebar {
@@ -341,6 +341,12 @@
             .results-container-mobile {
                 padding: 15px 12px;
             }
+            
+            #map {
+              min-height: 300px;
+              height: 100%;
+              width: 100%;
+            }
         }
     </style>
 </head>
@@ -630,12 +636,11 @@
         document.getElementById('analysisFilter').addEventListener('change', applyFilters);
         document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
-        window.onload = initMap;
-        
-        window.addEventListener('resize', function() {
-            if (map) {
-                map.invalidateSize();
-            }
+        window.onload = () => {
+          setTimeout(initMap, 600);
+        };
+        window.addEventListener("orientationchange", () => {
+          setTimeout(() => map.invalidateSize(), 1000);
         });
     </script>
 </body>
