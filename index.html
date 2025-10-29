@@ -454,6 +454,19 @@
         let filteredProjects = [...projects];
 
         function initMap() {
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Wait for mobile flex layout to settle before initializing map
+                setTimeout(function() {
+                    initializeMap();
+                }, 400);
+            } else {
+                initializeMap();
+            }
+        }
+
+        function initializeMap() {
             map = L.map('map', {
                 tap: true,
                 touchZoom: true,
@@ -478,6 +491,8 @@
             addMarkersToMap(projects);
             populateFilters();
             updateResults();
+
+            // Ensure map renders correctly after initialization
             setTimeout(function() {
                 map.invalidateSize();
             }, 100);
@@ -616,6 +631,7 @@
         document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
         window.onload = initMap;
+        
         window.addEventListener('resize', function() {
             if (map) {
                 map.invalidateSize();
