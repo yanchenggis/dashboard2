@@ -100,14 +100,9 @@
         }
 
         .results-section {
-            display: none;
-        }
-
-        .results-container {
-            background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
-            color: white;
-            padding: 30px 25px;
-            overflow-y: auto;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
 
         .results-header {
@@ -142,6 +137,10 @@
         .project-details {
             font-size: 12px;
             opacity: 0.8;
+        }
+
+        .results-container-mobile {
+            display: none;
         }
 
         .map-container {
@@ -261,34 +260,42 @@
                 font-size: 14px;
                 margin-bottom: 0;
             }
+
+            .results-section {
+                display: none;
+            }
+
+            .results-container-mobile {
+                display: block;
+                background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
+                color: white;
+                padding: 20px 15px;
+                order: 3;
+            }
+
+            .results-container-mobile .results-header {
+                font-size: 16px;
+                margin-bottom: 15px;
+                opacity: 0.9;
+            }
+
+            .results-container-mobile .project-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            .results-container-mobile .project-title {
+                font-size: 14px;
+            }
+
+            .results-container-mobile .project-details {
+                font-size: 11px;
+            }
             
             .map-container {
                 height: 50vh;
                 min-height: 300px;
                 order: 2;
-            }
-
-            .results-container {
-                order: 3;
-                padding: 20px 15px;
-            }
-
-            .results-header {
-                font-size: 16px;
-                margin-bottom: 15px;
-            }
-
-            .project-card {
-                padding: 12px;
-                margin-bottom: 12px;
-            }
-
-            .project-title {
-                font-size: 14px;
-            }
-
-            .project-details {
-                font-size: 11px;
             }
 
             .map-info-note {
@@ -331,7 +338,7 @@
                 font-size: 13px;
             }
 
-            .results-container {
+            .results-container-mobile {
                 padding: 15px 12px;
             }
         }
@@ -372,7 +379,7 @@
             <div id="map"></div>
         </div>
 
-        <div class="results-container">
+        <div class="results-container-mobile">
             <div class="results-header">Results (<span id="resultCountMobile">0</span>)</div>
             <div id="resultsContainerMobile"></div>
         </div>
@@ -551,9 +558,9 @@
         }
 
         function updateResults() {
-            const isMobile = window.innerWidth <= 768;
-            const resultsContainer = isMobile ? document.getElementById('resultsContainerMobile') : document.getElementById('resultsContainer');
-            const resultCount = isMobile ? document.getElementById('resultCountMobile') : document.getElementById('resultCount');
+            // Update desktop results
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultCount = document.getElementById('resultCount');
             
             resultCount.textContent = filteredProjects.length;
             resultsContainer.innerHTML = '';
@@ -574,6 +581,31 @@
                 };
                 
                 resultsContainer.appendChild(card);
+            });
+
+            // Update mobile results
+            const resultsContainerMobile = document.getElementById('resultsContainerMobile');
+            const resultCountMobile = document.getElementById('resultCountMobile');
+            
+            resultCountMobile.textContent = filteredProjects.length;
+            resultsContainerMobile.innerHTML = '';
+            
+            filteredProjects.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+                card.innerHTML = `
+                    <div class="project-title">${project.title}</div>
+                    <div class="project-details">
+                        ${project.practiceAreas.join(' | ')}<br>
+                        ${project.locations.map(l => l.name).join(' | ')}
+                    </div>
+                `;
+                
+                card.onclick = () => {
+                    window.open(project.storyMapUrl, '_blank');
+                };
+                
+                resultsContainerMobile.appendChild(card);
             });
         }
 
