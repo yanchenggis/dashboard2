@@ -468,10 +468,16 @@
 
         function initializeMap() {
             map = L.map('map', {
-                tap: true,
-                touchZoom: true,
-                dragging: true
-            }).setView([4.2105, 101.5758], 7); 
+              tap: true,
+              touchZoom: true,
+              dragging: true
+            });
+            
+            const bounds = L.latLngBounds([
+              [1.0, 99.5],  // southwest corner (below Johor)
+              [6.7, 104.5]  // northeast corner (above Kelantan)
+            ]);
+            map.fitBounds(bounds, { padding: [20, 20] });
 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
@@ -504,7 +510,15 @@
             }
             
             window.markerClusterGroup = L.markerClusterGroup({
-                maxClusterRadius: 400
+              maxClusterRadius: 400,
+              disableClusteringAtZoom: 8,  
+              spiderfyOnMaxZoom: false,    
+              zoomToBoundsOnClick: true,   
+              iconCreateFunction: null
+            });
+            
+            window.markerClusterGroup.on('clusterclick', function (a) {
+              a.layer.zoomToBounds({ padding: [80, 80], maxZoom: 7 }); 
             });
 
             const locationFilter = document.getElementById('locationFilter').value;
