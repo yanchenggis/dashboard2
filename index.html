@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Interactive Project Map</title>
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
@@ -11,17 +11,15 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
-
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f5f5f5;
     }
-    .container {
-      display: flex;
-      min-height: 100vh;
-    }
+    .container { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
     .sidebar {
       width: 350px;
       background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
@@ -35,187 +33,75 @@
 
     .filter-group { margin-bottom: 25px; }
     .filter-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      display: block; margin-bottom: 8px;
+      font-weight: 500; font-size: 14px;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
     .filter-select {
-      width: 100%;
-      padding: 12px 15px;
-      border: none;
-      border-radius: 8px;
-      background: white;
-      color: #333;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
+      width: 100%; padding: 12px 15px; border: none;
+      border-radius: 8px; background: white; color: #333;
+      font-size: 14px; cursor: pointer; transition: all 0.3s ease;
     }
-    .filter-select:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
-    }
+    .filter-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.3); }
+
     .filter-btn {
-      width: 100%;
-      padding: 15px;
-      background: #2c3e50;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      width: 100%; padding: 15px;
+      background: #2c3e50; color: white; border: none; border-radius: 8px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
     }
     .filter-btn:hover { background: #34495e; transform: translateY(-2px); }
-    .filter-btn:active { transform: translateY(0); }
 
+    /* Desktop Results */
     .results-section {
-      margin-top: 30px;
-      padding-top: 25px;
+      margin-top: 30px; padding-top: 25px;
       border-top: 1px solid rgba(255,255,255,0.2);
     }
-    .results-header {
-      font-size: 18px;
-      margin-bottom: 20px;
-      opacity: 0.9;
-    }
+    .results-header { font-size: 18px; margin-bottom: 20px; opacity: 0.9; }
     .project-card {
       background: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      transition: all 0.3s ease;
-      cursor: pointer;
+      padding: 15px; border-radius: 8px; margin-bottom: 15px;
+      transition: all 0.3s ease; cursor: pointer;
     }
     .project-card:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
-    .project-card:active { transform: translateX(3px); }
     .project-title { font-weight: 600; margin-bottom: 5px; }
     .project-details { font-size: 12px; opacity: 0.8; }
 
-    .results-container-mobile { display: none; }
+    /* Map */
+    .map-container { flex: 1; position: relative; }
+    #map { height: 100%; width: 100%; min-height: 300px; }
 
-    .map-container {
-      flex: 1;
-      position: relative;
-    }
-    #map {
-      height: 100%;
-      width: 100%;
-      min-height: 300px;
-    }
     .map-info-note {
-      position: absolute;
-      top: 10px;
-      left: 60px;
+      position: absolute; top: 10px; left: 60px;
       background: rgba(255, 255, 255, 0.95);
-      padding: 10px 15px;
-      border-radius: 8px;
+      padding: 10px 15px; border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      z-index: 1000;
-      font-size: 13px;
-      color: #333;
-      max-width: 280px;
-      line-height: 1.4;
-      transition: opacity 0.3s ease;
+      z-index: 1000; font-size: 13px; color: #333;
+      max-width: 280px; line-height: 1.4;
     }
-    .map-info-note .info-icon {
-      color: #0F5DF4;
-      font-weight: bold;
-      margin-right: 5px;
-    }
-    .map-container:hover .map-info-note { opacity: 0.3; }
-    .map-info-note.popup-open { opacity: 0.2; }
 
+    /* Popup */
     .leaflet-popup-content { text-align: center; min-width: 200px; }
-    .popup-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      font-size: 16px;
-      color: #21C875;
-    }
+    .popup-title { font-weight: bold; margin-bottom: 10px; font-size: 16px; color: #21C875; }
     .popup-details { margin-bottom: 10px; color: #666; font-size: 13px; }
     .leaflet-popup-content .popup-link {
-      display: inline-block;
-      background: #0F5DF4;
-      color: #ffffff;
-      padding: 8px 16px;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background 0.3s ease;
-      font-size: 14px;
+      display: inline-block; background: #0F5DF4; color: #fff;
+      padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;
     }
-    .leaflet-popup-content .popup-link:hover {
-      background: #21C875;
-      color: #ffffff;
-    }
+    .leaflet-popup-content .popup-link:hover { background: #21C875; }
+
+    /* Mobile */
+    .results-container-mobile { display: none; }
 
     @media (max-width: 768px) {
-      .container { flex-direction: column; height: auto; }
-      .sidebar {
-        width: 100%;
-        height: auto;
-        padding: 20px 15px;
-        overflow-y: visible;
-        order: 1;
-      }
-      .sidebar h1 { font-size: 24px; margin-bottom: 10px; }
-      .sidebar p { font-size: 14px; margin-bottom: 20px; }
-      .filter-group { margin-bottom: 15px; }
-      .filter-group label { font-size: 12px; margin-bottom: 6px; }
-      .filter-select { padding: 10px 12px; font-size: 14px; }
-      .filter-btn { padding: 12px; font-size: 14px; margin-bottom: 0; }
-
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; padding: 20px 15px; }
       .results-section { display: none !important; }
-
       .results-container-mobile {
         display: block;
         background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
-        color: white;
-        padding: 20px 15px;
-        order: 3;
+        color: white; padding: 20px 15px;
       }
-      .results-container-mobile .results-header {
-        font-size: 16px;
-        margin-bottom: 15px;
-        opacity: 0.9;
-      }
-      .results-container-mobile .project-card {
-        padding: 12px;
-        margin-bottom: 12px;
-      }
-      .results-container-mobile .project-title { font-size: 14px; }
-      .results-container-mobile .project-details { font-size: 11px; }
-
-      .map-container {
-        height: 50vh;
-        min-height: 300px;
-        order: 2;
-      }
-      .map-info-note {
-        top: 10px; left: 10px; right: 10px;
-        max-width: none;
-        font-size: 11px;
-        padding: 8px 12px;
-      }
-      .leaflet-popup-content { min-width: 180px; }
-      .popup-title { font-size: 14px; }
-      .popup-details { font-size: 12px; }
-      .leaflet-popup-content .popup-link {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .sidebar { padding: 15px 12px; }
-      .sidebar h1 { font-size: 20px; }
-      .sidebar p { font-size: 13px; }
-      .results-container-mobile { padding: 15px 12px; }
     }
   </style>
 </head>
@@ -241,6 +127,12 @@
       </div>
 
       <button class="filter-btn" onclick="applyFilters()">APPLY FILTERS</button>
+
+      <!-- ✅ Desktop results area -->
+      <div class="results-section">
+        <div class="results-header">Results (<span id="resultCount">0</span>)</div>
+        <div id="resultsContainer"></div>
+      </div>
     </div>
 
     <div class="map-container">
@@ -250,6 +142,7 @@
       <div id="map"></div>
     </div>
 
+    <!-- ✅ Mobile results area -->
     <div class="results-container-mobile">
       <div class="results-header">Results (<span id="resultCountMobile">0</span>)</div>
       <div id="resultsContainerMobile"></div>
@@ -267,27 +160,20 @@
       { id: 2, title: "Covid-19 Movement Control Order Effect on Kuala Lumpur", practiceAreas: ["COVID-19"],
         locations: [{ name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] }],
         storyMapUrl: "https://storymaps.arcgis.com/stories/8bce45b4785c497682674396e8a80cf7" },
-      { id: 3, title: "Demographics of GTWHS: Building Use, Population & Employment", practiceAreas: ["Demographic"],
+      { id: 3, title: "Demographics of GTWHS", practiceAreas: ["Demographic"],
         locations: [{ name: "Penang", coordinates: [5.4141, 100.3285] }],
         storyMapUrl: "https://storymaps.arcgis.com/stories/325dedcf0a064ce6989bb17cea4fd7cc" },
       { id: 4, title: "George Town World Heritage Site", practiceAreas: ["Baseline Study"],
         locations: [{ name: "Penang", coordinates: [5.4141, 100.3285] }],
         storyMapUrl: "https://storymaps.arcgis.com/stories/059f3a83deff43489ba237ebdeb9e75f" },
-      { id: 5, title: "Land Surface Temperature of Urban Areas in Malaysia", practiceAreas: ["Climate & Environment"],
+      { id: 5, title: "Land Surface Temperature of Urban Areas", practiceAreas: ["Climate & Environment"],
         locations: [
           { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
           { name: "Penang", coordinates: [5.4141, 100.3285] },
           { name: "Ipoh", coordinates: [4.6005, 101.0758] },
           { name: "Johor Bahru", coordinates: [1.4799, 103.7643] }
         ],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/29dda374515e4ea29a13f62cc4cbe646" },
-      { id: 6, title: "Warisan KL: Creative Industries and Cultural Services", practiceAreas: ["Creative & Cultural"],
-        locations: [
-          { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
-          { name: "Selangor", coordinates: [3.5092, 101.5248] },
-          { name: "Putrajaya", coordinates: [2.9264, 101.6964] }
-        ],
-        storyMapUrl: "https://storymaps.arcgis.com/templates/a32f62a617214120b9fb67a25b7bf1d8" }
+        storyMapUrl: "https://storymaps.arcgis.com/stories/29dda374515e4ea29a13f62cc4cbe646" }
     ];
 
     let map;
@@ -295,127 +181,69 @@
 
     function initMap() {
       const isMobile = window.innerWidth <= 768;
-      if (isMobile) {
-        setTimeout(() => initializeMap(), 600);
-      } else {
-        initializeMap();
-      }
+      if (isMobile) setTimeout(initializeMap, 600);
+      else initializeMap();
     }
 
     function initializeMap() {
-      map = L.map('map', {
-        tap: true,
-        touchZoom: true,
-        dragging: true
-      }).setView([4.2105, 101.9758], 7);
-
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-
-      const infoNote = document.querySelector('.map-info-note');
-      map.on('popupopen', () => infoNote.classList.add('popup-open'));
-      map.on('popupclose', () => infoNote.classList.remove('popup-open'));
-
-      addMarkersToMap(projects);
+      map = L.map('map').setView([4.2105, 101.9758], 7);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+      addMarkers(filteredProjects);
       populateFilters();
       updateResults();
-
       setTimeout(() => map.invalidateSize(), 1000);
     }
 
-    function addMarkersToMap(projectList) {
+    function addMarkers(list) {
       if (window.markerClusterGroup) map.removeLayer(window.markerClusterGroup);
-
       window.markerClusterGroup = L.markerClusterGroup({ maxClusterRadius: 400 });
-
-      const locationFilter = document.getElementById('locationFilter').value;
-
-      projectList.forEach(project => {
-        project.locations.forEach(location => {
-          if (!locationFilter || location.name === locationFilter) {
-            const marker = L.marker(location.coordinates)
-              .bindPopup(createPopupContent(project, location));
-            window.markerClusterGroup.addLayer(marker);
-          }
-        });
-      });
-
+      list.forEach(p => p.locations.forEach(loc => {
+        const m = L.marker(loc.coordinates)
+          .bindPopup(`<b>${p.title}</b><br>${loc.name}<br><a href="${p.storyMapUrl}" target="_blank">View Story Map</a>`);
+        window.markerClusterGroup.addLayer(m);
+      }));
       map.addLayer(window.markerClusterGroup);
     }
 
-    function createPopupContent(project, location) {
-      return `
-        <div class="popup-content">
-          <div class="popup-title">${project.title}</div>
-          <div class="popup-details">
-            <strong>Location:</strong> ${location.name}<br>
-            <strong>Practice Areas:</strong> ${project.practiceAreas.join(', ')}
-          </div>
-          <a href="${project.storyMapUrl}" target="_blank" class="popup-link">View Story Map</a>
-        </div>
-      `;
-    }
-
     function populateFilters() {
-      const practiceAreas = [...new Set(projects.flatMap(p => p.practiceAreas))].sort();
-      const practiceSelect = document.getElementById('analysisFilter');
-      practiceAreas.forEach(area => {
-        const option = document.createElement('option');
-        option.value = area;
-        option.textContent = area;
-        practiceSelect.appendChild(option);
-      });
-
-      const locations = [...new Set(projects.flatMap(p => p.locations.map(l => l.name)))].sort();
-      const locationSelect = document.getElementById('locationFilter');
-      locations.forEach(location => {
-        const option = document.createElement('option');
-        option.value = location;
-        option.textContent = location;
-        locationSelect.appendChild(option);
-      });
+      const topics = [...new Set(projects.flatMap(p => p.practiceAreas))];
+      const locations = [...new Set(projects.flatMap(p => p.locations.map(l => l.name)))];
+      const aSel = document.getElementById('analysisFilter');
+      const lSel = document.getElementById('locationFilter');
+      topics.forEach(t => aSel.insertAdjacentHTML('beforeend', `<option>${t}</option>`));
+      locations.forEach(l => lSel.insertAdjacentHTML('beforeend', `<option>${l}</option>`));
     }
 
     function applyFilters() {
-      const analysisFilter = document.getElementById('analysisFilter').value;
-      const locationFilter = document.getElementById('locationFilter').value;
-
-      filteredProjects = projects.filter(project => {
-        const matchesPractice = !analysisFilter || project.practiceAreas.includes(analysisFilter);
-        const matchesLocation = !locationFilter || project.locations.some(loc => loc.name === locationFilter);
-        return matchesPractice && matchesLocation;
-      });
-
-      addMarkersToMap(filteredProjects);
+      const a = document.getElementById('analysisFilter').value;
+      const l = document.getElementById('locationFilter').value;
+      filteredProjects = projects.filter(p =>
+        (!a || p.practiceAreas.includes(a)) &&
+        (!l || p.locations.some(loc => loc.name === l))
+      );
+      addMarkers(filteredProjects);
       updateResults();
     }
 
     function updateResults() {
-      const resultsContainerMobile = document.getElementById('resultsContainerMobile');
-      const resultCountMobile = document.getElementById('resultCountMobile');
-      resultCountMobile.textContent = filteredProjects.length;
-      resultsContainerMobile.innerHTML = '';
-
-      filteredProjects.forEach(project => {
-        const card = document.createElement('div');
-        card.className = 'project-card';
-        card.innerHTML = `
-          <div class="project-title">${project.title}</div>
-          <div class="project-details">
-            ${project.practiceAreas.join(' | ')}<br>
-            ${project.locations.map(l => l.name).join(' | ')}
-          </div>
-        `;
-        card.onclick = () => window.open(project.storyMapUrl, '_blank');
-        resultsContainerMobile.appendChild(card);
+      const resDesk = document.getElementById('resultsContainer');
+      const resMob = document.getElementById('resultsContainerMobile');
+      const cDesk = document.getElementById('resultCount');
+      const cMob = document.getElementById('resultCountMobile');
+      resDesk.innerHTML = resMob.innerHTML = '';
+      cDesk.textContent = cMob.textContent = filteredProjects.length;
+      filteredProjects.forEach(p => {
+        const html = `<div class="project-card" onclick="window.open('${p.storyMapUrl}', '_blank')">
+          <div class="project-title">${p.title}</div>
+          <div class="project-details">${p.practiceAreas.join(' | ')}<br>${p.locations.map(l => l.name).join(' | ')}</div>
+        </div>`;
+        resDesk.insertAdjacentHTML('beforeend', html);
+        resMob.insertAdjacentHTML('beforeend', html);
       });
     }
 
-    document.getElementById('analysisFilter').addEventListener('change', applyFilters);
-    document.getElementById('locationFilter').addEventListener('change', applyFilters);
     window.onload = initMap;
-    window.addEventListener('resize', () => { if (map) map.invalidateSize(); });
+    window.onresize = () => map && map.invalidateSize();
   </script>
 </body>
 </html>
