@@ -16,32 +16,29 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f5f5f5;
-      overflow: hidden;
     }
+    .container { display: flex; min-height: 100vh; }
 
-    .container {
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
+    /* Sidebar */
     .sidebar {
       width: 350px;
       background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
       color: white;
       padding: 30px 25px;
-      overflow-y: auto; /* ✅ Scroll only the sidebar */
-      flex-shrink: 0;
+      overflow: hidden;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
     }
 
     .sidebar h1 { font-size: 28px; margin-bottom: 15px; font-weight: 300; }
-    .sidebar p { margin-bottom: 30px; opacity: 0.9; line-height: 1.5; }
+    .sidebar p { margin-bottom: 25px; opacity: 0.9; line-height: 1.5; }
 
-    .filter-group { margin-bottom: 25px; }
+    .filter-group { margin-bottom: 20px; }
     .filter-group label {
-      display: block; margin-bottom: 8px; font-weight: 500;
-      font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;
+      display: block; margin-bottom: 8px;
+      font-weight: 500; font-size: 14px;
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
 
     .filter-select {
@@ -51,25 +48,50 @@
     }
 
     .filter-select:focus {
-      outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
     }
 
     .filter-btn {
-      width: 100%; padding: 15px; background: #2c3e50; color: white;
-      border: none; border-radius: 8px; font-size: 16px;
-      font-weight: 600; cursor: pointer; transition: all 0.3s ease;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      width: 100%; padding: 15px;
+      background: #2c3e50; color: white; border: none; border-radius: 8px;
+      font-size: 16px; font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
     }
 
     .filter-btn:hover { background: #34495e; transform: translateY(-2px); }
 
-    .results-section { margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.2); }
-    .results-header { font-size: 18px; margin-bottom: 20px; opacity: 0.9; }
+    /* Desktop Results (fixed height + scrollable) */
+    .results-section {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .results-header {
+      font-size: 18px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+      flex-shrink: 0;
+    }
+
+    #resultsContainer {
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 8px;
+    }
 
     .project-card {
       background: rgba(255,255,255,0.1);
-      padding: 15px; border-radius: 8px; margin-bottom: 15px;
-      transition: all 0.3s ease; cursor: pointer;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .project-card:hover {
@@ -80,56 +102,50 @@
     .project-title { font-weight: 600; margin-bottom: 5px; }
     .project-details { font-size: 12px; opacity: 0.8; }
 
-    .map-container { flex: 1; position: relative; overflow: hidden; }
-    #map { height: 100%; width: 100%; }
+    /* Map */
+    .map-container { flex: 1; position: relative; }
+    #map { height: 100%; width: 100%; min-height: 300px; }
 
     .map-info-note {
       position: absolute; top: 10px; left: 60px;
-      background: rgba(255,255,255,0.95);
+      background: rgba(255, 255, 255, 0.95);
       padding: 10px 15px; border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       z-index: 1000; font-size: 13px; color: #333;
       max-width: 280px; line-height: 1.4;
-      transition: opacity 0.3s ease;
     }
 
-    .map-info-note .info-icon {
-      color: #0F5DF4; font-weight: bold; margin-right: 5px;
-    }
-
-    .map-container:hover .map-info-note { opacity: 0.3; }
-    .map-info-note.popup-open { opacity: 0.2; }
-
+    /* Popup */
     .leaflet-popup-content { text-align: center; min-width: 200px; }
     .popup-title { font-weight: bold; margin-bottom: 10px; font-size: 16px; color: #21C875; }
     .popup-details { margin-bottom: 10px; color: #666; font-size: 13px; }
     .leaflet-popup-content .popup-link {
       display: inline-block; background: #0F5DF4; color: #fff;
-      padding: 8px 16px; border-radius: 5px; text-decoration: none;
-      transition: background 0.3s ease; font-size: 14px;
+      padding: 8px 16px; border-radius: 5px; text-decoration: none; transition: background 0.3s ease;
     }
     .leaflet-popup-content .popup-link:hover { background: #21C875; }
 
+    /* Mobile */
+    .results-container-mobile { display: none; }
+
     @media (max-width: 768px) {
-      body { overflow: auto; }
-      .container { flex-direction: column; height: auto; }
-      .sidebar {
-        width: 100%; height: auto; padding: 20px 15px;
-        overflow-y: visible; order: 1;
-      }
-      .map-container { height: 50vh; min-height: 300px; order: 2; }
-      .map-info-note {
-        top: 10px; left: 10px; right: 10px;
-        max-width: none; font-size: 11px; padding: 8px 12px;
+      .container { flex-direction: column; }
+      .sidebar { width: 100%; padding: 20px 15px; height: auto; }
+      .results-section { display: none !important; }
+      .results-container-mobile {
+        display: block;
+        background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
+        color: white; padding: 20px 15px;
       }
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="sidebar">
       <h1>Filter Projects</h1>
-      <p>Use the filters below to find the best option for you.</p>
+      <p>Use the filters below to explore project highlights.</p>
 
       <div class="filter-group">
         <label for="analysisFilter">TOPIC</label>
@@ -139,7 +155,7 @@
       </div>
 
       <div class="filter-group">
-        <label for="locationFilter">Location</label>
+        <label for="locationFilter">LOCATION</label>
         <select id="locationFilter" class="filter-select">
           <option value="">All Locations</option>
         </select>
@@ -147,6 +163,7 @@
 
       <button class="filter-btn" onclick="applyFilters()">APPLY FILTERS</button>
 
+      <!-- ✅ Desktop results area -->
       <div class="results-section">
         <div class="results-header">Results (<span id="resultCount">0</span>)</div>
         <div id="resultsContainer"></div>
@@ -155,14 +172,21 @@
 
     <div class="map-container">
       <div class="map-info-note">
-        <span class="info-icon">ℹ️</span>Note: Map markers show project locations. One project may have multiple locations.
+        <span class="info-icon">ℹ️</span> Map markers show project locations. One project may have multiple sites.
       </div>
       <div id="map"></div>
+    </div>
+
+    <!-- ✅ Mobile results area -->
+    <div class="results-container-mobile">
+      <div class="results-header">Results (<span id="resultCountMobile">0</span>)</div>
+      <div id="resultsContainerMobile"></div>
     </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+
   <script>
     const projects = [
       {
@@ -181,7 +205,7 @@
       },
       {
         id: 3,
-        title: "Demographics of GTWHS: Building Use, Population & Employment",
+        title: "Demographics of GTWHS",
         practiceAreas: ["Demographic"],
         locations: [{ name: "Penang", coordinates: [5.4141, 100.3285] }],
         storyMapUrl: "https://storymaps.arcgis.com/stories/325dedcf0a064ce6989bb17cea4fd7cc"
@@ -195,7 +219,7 @@
       },
       {
         id: 5,
-        title: "Land Surface Temperature of Urban Areas in Malaysia",
+        title: "Land Surface Temperature of Urban Areas",
         practiceAreas: ["Climate & Environment"],
         locations: [
           { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
@@ -204,77 +228,54 @@
           { name: "Johor Bahru", coordinates: [1.4799, 103.7643] }
         ],
         storyMapUrl: "https://storymaps.arcgis.com/stories/29dda374515e4ea29a13f62cc4cbe646"
-      },
-      {
-        id: 6,
-        title: "Warisan KL: Creative Industries and Cultural Services",
-        practiceAreas: ["Creative & Cultural"],
-        locations: [
-          { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
-          { name: "Selangor", coordinates: [3.5092, 101.5248] },
-          { name: "Putrajaya", coordinates: [2.9264, 101.6964] }
-        ],
-        storyMapUrl: "https://storymaps.arcgis.com/templates/a32f62a617214120b9fb67a25b7bf1d8"
       }
     ];
 
-    let map, filteredProjects = [...projects];
+    let map;
+    let filteredProjects = [...projects];
 
     function initMap() {
-      map = L.map('map', { tap: true, touchZoom: true, dragging: true })
-        .setView([4.2105, 101.5758], 7);
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) setTimeout(initializeMap, 600);
+      else initializeMap();
+    }
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors'
-      }).addTo(map);
-
-      const infoNote = document.querySelector('.map-info-note');
-      map.on('popupopen', () => infoNote.classList.add('popup-open'));
-      map.on('popupclose', () => infoNote.classList.remove('popup-open'));
-
-      addMarkersToMap(projects);
+    function initializeMap() {
+      map = L.map('map').setView([4.2105, 101.9758], 7);
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png').addTo(map);
+      addMarkers(filteredProjects);
       populateFilters();
       updateResults();
+      setTimeout(() => map.invalidateSize(), 1000);
     }
 
-    function addMarkersToMap(projectList) {
+    function addMarkers(list) {
       if (window.markerClusterGroup) map.removeLayer(window.markerClusterGroup);
       window.markerClusterGroup = L.markerClusterGroup({ maxClusterRadius: 400 });
-      const locationFilter = document.getElementById('locationFilter').value;
 
-      projectList.forEach(project => {
-        project.locations.forEach(location => {
-          if (!locationFilter || location.name === locationFilter) {
-            const marker = L.marker(location.coordinates)
-              .bindPopup(createPopupContent(project, location));
-            window.markerClusterGroup.addLayer(marker);
-          }
-        });
-      });
+      const bounds = [];
+
+      list.forEach(p => p.locations.forEach(loc => {
+        const marker = L.marker(loc.coordinates)
+          .bindPopup(`<b>${p.title}</b><br>${loc.name}<br><a href="${p.storyMapUrl}" target="_blank">View Story Map</a>`);
+        window.markerClusterGroup.addLayer(marker);
+        bounds.push(loc.coordinates);
+      }));
 
       map.addLayer(window.markerClusterGroup);
-    }
 
-    function createPopupContent(project, location) {
-      return `
-        <div class="popup-content">
-          <div class="popup-title">${project.title}</div>
-          <div class="popup-details">
-            <strong>Location:</strong> ${location.name}<br>
-            <strong>Practice Areas:</strong> ${project.practiceAreas.join(', ')}
-          </div>
-          <a href="${project.storyMapUrl}" target="_blank" class="popup-link">View Story Map</a>
-        </div>`;
+      // ✅ Adjust zoom to fit filtered markers
+      if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] });
+      else map.setView([4.2105, 101.9758], 7);
     }
 
     function populateFilters() {
-      const areas = [...new Set(projects.flatMap(p => p.practiceAreas))].sort();
-      const areaSelect = document.getElementById('analysisFilter');
-      areas.forEach(a => areaSelect.insertAdjacentHTML('beforeend', `<option>${a}</option>`));
-
-      const locs = [...new Set(projects.flatMap(p => p.locations.map(l => l.name)))].sort();
-      const locSelect = document.getElementById('locationFilter');
-      locs.forEach(l => locSelect.insertAdjacentHTML('beforeend', `<option>${l}</option>`));
+      const topics = [...new Set(projects.flatMap(p => p.practiceAreas))];
+      const locations = [...new Set(projects.flatMap(p => p.locations.map(l => l.name)))];
+      const aSel = document.getElementById('analysisFilter');
+      const lSel = document.getElementById('locationFilter');
+      topics.forEach(t => aSel.insertAdjacentHTML('beforeend', `<option>${t}</option>`));
+      locations.forEach(l => lSel.insertAdjacentHTML('beforeend', `<option>${l}</option>`));
     }
 
     function applyFilters() {
@@ -284,33 +285,30 @@
         (!a || p.practiceAreas.includes(a)) &&
         (!l || p.locations.some(loc => loc.name === l))
       );
-      addMarkersToMap(filteredProjects);
+      addMarkers(filteredProjects);
       updateResults();
     }
 
     function updateResults() {
-      const res = document.getElementById('resultsContainer');
-      const count = document.getElementById('resultCount');
-      count.textContent = filteredProjects.length;
-      res.innerHTML = '';
+      const resDesk = document.getElementById('resultsContainer');
+      const resMob = document.getElementById('resultsContainerMobile');
+      const cDesk = document.getElementById('resultCount');
+      const cMob = document.getElementById('resultCountMobile');
+      resDesk.innerHTML = resMob.innerHTML = '';
+      cDesk.textContent = cMob.textContent = filteredProjects.length;
 
-      filteredProjects.forEach(project => {
-        const div = document.createElement('div');
-        div.className = 'project-card';
-        div.innerHTML = `
-          <div class="project-title">${project.title}</div>
-          <div class="project-details">
-            ${project.practiceAreas.join(' | ')}<br>
-            ${project.locations.map(l => l.name).join(' | ')}
-          </div>`;
-        div.onclick = () => window.open(project.storyMapUrl, '_blank');
-        res.appendChild(div);
+      filteredProjects.forEach(p => {
+        const html = `<div class="project-card" onclick="window.open('${p.storyMapUrl}', '_blank')">
+          <div class="project-title">${p.title}</div>
+          <div class="project-details">${p.practiceAreas.join(' | ')}<br>${p.locations.map(l => l.name).join(' | ')}</div>
+        </div>`;
+        resDesk.insertAdjacentHTML('beforeend', html);
+        resMob.insertAdjacentHTML('beforeend', html);
       });
     }
 
-    document.getElementById('analysisFilter').addEventListener('change', applyFilters);
-    document.getElementById('locationFilter').addEventListener('change', applyFilters);
     window.onload = initMap;
+    window.onresize = () => map && map.invalidateSize();
   </script>
 </body>
 </html>
