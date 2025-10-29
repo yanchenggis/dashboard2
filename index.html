@@ -25,24 +25,32 @@
       background: linear-gradient(135deg, rgba(15,93,244,1) 19%, rgba(33,200,117,1) 89%);
       color: white;
       padding: 30px 25px;
-      overflow-y: auto;
+      overflow: hidden;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
     }
-    .sidebar h1 { font-size: 28px; margin-bottom: 15px; font-weight: 300; }
-    .sidebar p { margin-bottom: 30px; opacity: 0.9; line-height: 1.5; }
 
-    .filter-group { margin-bottom: 25px; }
+    .sidebar h1 { font-size: 28px; margin-bottom: 15px; font-weight: 300; }
+    .sidebar p { margin-bottom: 25px; opacity: 0.9; line-height: 1.5; }
+
+    .filter-group { margin-bottom: 20px; }
     .filter-group label {
       display: block; margin-bottom: 8px;
       font-weight: 500; font-size: 14px;
       text-transform: uppercase; letter-spacing: 0.5px;
     }
+
     .filter-select {
       width: 100%; padding: 12px 15px; border: none;
       border-radius: 8px; background: white; color: #333;
       font-size: 14px; cursor: pointer; transition: all 0.3s ease;
     }
-    .filter-select:focus { outline: none; box-shadow: 0 0 0 3px rgba(255,255,255,0.3); }
+
+    .filter-select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
 
     .filter-btn {
       width: 100%; padding: 15px;
@@ -50,20 +58,47 @@
       font-size: 16px; font-weight: 600; cursor: pointer;
       transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 0.5px;
     }
+
     .filter-btn:hover { background: #34495e; transform: translateY(-2px); }
 
-    /* Desktop Results */
+    /* Desktop Results (fixed height + scrollable) */
     .results-section {
-      margin-top: 30px; padding-top: 25px;
+      margin-top: 25px;
+      padding-top: 20px;
       border-top: 1px solid rgba(255,255,255,0.2);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    .results-header { font-size: 18px; margin-bottom: 20px; opacity: 0.9; }
+
+    .results-header {
+      font-size: 18px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+      flex-shrink: 0;
+    }
+
+    #resultsContainer {
+      overflow-y: auto;
+      flex: 1;
+      padding-right: 8px;
+    }
+
     .project-card {
       background: rgba(255,255,255,0.1);
-      padding: 15px; border-radius: 8px; margin-bottom: 15px;
-      transition: all 0.3s ease; cursor: pointer;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
-    .project-card:hover { background: rgba(255,255,255,0.2); transform: translateX(5px); }
+
+    .project-card:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateX(5px);
+    }
+
     .project-title { font-weight: 600; margin-bottom: 5px; }
     .project-details { font-size: 12px; opacity: 0.8; }
 
@@ -95,7 +130,7 @@
 
     @media (max-width: 768px) {
       .container { flex-direction: column; }
-      .sidebar { width: 100%; padding: 20px 15px; }
+      .sidebar { width: 100%; padding: 20px 15px; height: auto; }
       .results-section { display: none !important; }
       .results-container-mobile {
         display: block;
@@ -110,7 +145,7 @@
   <div class="container">
     <div class="sidebar">
       <h1>Filter Projects</h1>
-      <p>Use the filters below to find the best option for you.</p>
+      <p>Use the filters below to explore project highlights.</p>
 
       <div class="filter-group">
         <label for="analysisFilter">TOPIC</label>
@@ -120,7 +155,7 @@
       </div>
 
       <div class="filter-group">
-        <label for="locationFilter">Location</label>
+        <label for="locationFilter">LOCATION</label>
         <select id="locationFilter" class="filter-select">
           <option value="">All Locations</option>
         </select>
@@ -137,7 +172,7 @@
 
     <div class="map-container">
       <div class="map-info-note">
-        <span class="info-icon">ℹ️</span>Note: Map markers show project locations. One project may have multiple locations.
+        <span class="info-icon">ℹ️</span> Map markers show project locations. One project may have multiple sites.
       </div>
       <div id="map"></div>
     </div>
@@ -154,33 +189,46 @@
 
   <script>
     const projects = [
-      { id: 1, title: "Covid-19 Crisis: Atlas of Community Resilience", practiceAreas: ["COVID-19"],
+      {
+        id: 1,
+        title: "Covid-19 Crisis: Atlas of Community Resilience",
+        practiceAreas: ["COVID-19"],
         locations: [{ name: "Malaysia", coordinates: [4.2105, 101.9758] }],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/b2d924fe27b54e7e95a0b798cffd291f" },
-      { id: 2, title: "Covid-19 Movement Control Order Effect on Kuala Lumpur", practiceAreas: ["COVID-19"],
+        storyMapUrl: "https://storymaps.arcgis.com/stories/b2d924fe27b54e7e95a0b798cffd291f"
+      },
+      {
+        id: 2,
+        title: "Covid-19 Movement Control Order Effect on Kuala Lumpur",
+        practiceAreas: ["COVID-19"],
         locations: [{ name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] }],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/8bce45b4785c497682674396e8a80cf7" },
-      { id: 3, title: "Demographics of GTWHS: Building Use, Population & Employment", practiceAreas: ["Demographic"],
+        storyMapUrl: "https://storymaps.arcgis.com/stories/8bce45b4785c497682674396e8a80cf7"
+      },
+      {
+        id: 3,
+        title: "Demographics of GTWHS",
+        practiceAreas: ["Demographic"],
         locations: [{ name: "Penang", coordinates: [5.4141, 100.3285] }],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/325dedcf0a064ce6989bb17cea4fd7cc" },
-      { id: 4, title: "George Town World Heritage Site", practiceAreas: ["Baseline Study"],
+        storyMapUrl: "https://storymaps.arcgis.com/stories/325dedcf0a064ce6989bb17cea4fd7cc"
+      },
+      {
+        id: 4,
+        title: "George Town World Heritage Site",
+        practiceAreas: ["Baseline Study"],
         locations: [{ name: "Penang", coordinates: [5.4141, 100.3285] }],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/059f3a83deff43489ba237ebdeb9e75f" },
-      { id: 5, title: "Land Surface Temperature of Urban Areas in Malaysia", practiceAreas: ["Climate & Environment"],
+        storyMapUrl: "https://storymaps.arcgis.com/stories/059f3a83deff43489ba237ebdeb9e75f"
+      },
+      {
+        id: 5,
+        title: "Land Surface Temperature of Urban Areas",
+        practiceAreas: ["Climate & Environment"],
         locations: [
           { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
           { name: "Penang", coordinates: [5.4141, 100.3285] },
           { name: "Ipoh", coordinates: [4.6005, 101.0758] },
           { name: "Johor Bahru", coordinates: [1.4799, 103.7643] }
         ],
-        storyMapUrl: "https://storymaps.arcgis.com/stories/29dda374515e4ea29a13f62cc4cbe646" },
-      {id: 6, title: "Warisan KL: Creative Industries and Cultural Services", practiceAreas: ["Creative & Cultural"], 
-        locations: [
-          { name: "Kuala Lumpur", coordinates: [3.1319, 101.6841] },
-          { name: "Selangor", coordinates: [3.5092, 101.5248] },
-          { name: "Putrajaya", coordinates: [2.9264, 101.6964] }
-        ],
-        storyMapUrl: "https://storymaps.arcgis.com/templates/a32f62a617214120b9fb67a25b7bf1d8"}
+        storyMapUrl: "https://storymaps.arcgis.com/stories/29dda374515e4ea29a13f62cc4cbe646"
+      }
     ];
 
     let map;
@@ -204,12 +252,21 @@
     function addMarkers(list) {
       if (window.markerClusterGroup) map.removeLayer(window.markerClusterGroup);
       window.markerClusterGroup = L.markerClusterGroup({ maxClusterRadius: 400 });
+
+      const bounds = [];
+
       list.forEach(p => p.locations.forEach(loc => {
-        const m = L.marker(loc.coordinates)
+        const marker = L.marker(loc.coordinates)
           .bindPopup(`<b>${p.title}</b><br>${loc.name}<br><a href="${p.storyMapUrl}" target="_blank">View Story Map</a>`);
-        window.markerClusterGroup.addLayer(m);
+        window.markerClusterGroup.addLayer(marker);
+        bounds.push(loc.coordinates);
       }));
+
       map.addLayer(window.markerClusterGroup);
+
+      // ✅ Adjust zoom to fit filtered markers
+      if (bounds.length > 0) map.fitBounds(bounds, { padding: [50, 50] });
+      else map.setView([4.2105, 101.9758], 7);
     }
 
     function populateFilters() {
@@ -239,6 +296,7 @@
       const cMob = document.getElementById('resultCountMobile');
       resDesk.innerHTML = resMob.innerHTML = '';
       cDesk.textContent = cMob.textContent = filteredProjects.length;
+
       filteredProjects.forEach(p => {
         const html = `<div class="project-card" onclick="window.open('${p.storyMapUrl}', '_blank')">
           <div class="project-title">${p.title}</div>
