@@ -524,7 +524,7 @@
         }
 
         function createPopupContent(project, location) {
-            return 
+            return `
                 <div class="popup-content">
                     <div class="popup-title">${project.title}</div>
                     <div class="popup-details">
@@ -535,7 +535,7 @@
                         View Story Map
                     </a>
                 </div>
-            ;
+            `;
         }
 
         function populateFilters() {
@@ -586,13 +586,13 @@
             filteredProjects.forEach(project => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
-                card.innerHTML = 
+                card.innerHTML = `
                     <div class="project-title">${project.title}</div>
                     <div class="project-details">
                         ${project.practiceAreas.join(' | ')}<br>
                         ${project.locations.map(l => l.name).join(' | ')}
                     </div>
-                ;
+                `;
                 
                 card.onclick = () => {
                     window.open(project.storyMapUrl, '_blank');
