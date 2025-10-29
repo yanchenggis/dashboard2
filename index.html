@@ -613,6 +613,11 @@
         document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
         window.onload = initMap;
+        window.addEventListener('resize', function() {
+            if (map) {
+                map.invalidateSize();
+            }
+        });
     </script>
 </body>
 </html>
