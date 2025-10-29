@@ -21,7 +21,7 @@
 
         .container {
             display: flex;
-            min-height: 100vh;
+            height: 100vh;
         }
 
         .sidebar {
@@ -146,13 +146,9 @@
         .map-container {
             flex: 1;
             position: relative;
-            min-height: 400px;
-            height: 60vh;
-            z-index: 0;
         }
 
         #map {
-            min-height: 300px;
             height: 100%;
             width: 100%;
         }
@@ -297,10 +293,9 @@
             }
             
             .map-container {
-                height: 60vh;
-                min-height: 350px;
+                height: 50vh;
+                min-height: 300px;
                 order: 2;
-                z-index: 0;
             }
 
             .map-info-note {
@@ -459,18 +454,24 @@
         let filteredProjects = [...projects];
 
         function initMap() {
-            initializeMap();
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Wait for mobile flex layout to settle before initializing map
+                setTimeout(function() {
+                    initializeMap();
+                }, 400);
+            } else {
+                initializeMap();
+            }
         }
 
         function initializeMap() {
-            const isMobile = window.innerWidth <= 768;
-            
             map = L.map('map', {
                 tap: true,
                 touchZoom: true,
-                dragging: true,
-                maxZoom: isMobile ? 10 : 18
-            }).setView([4.2105, 101.5758], 6); 
+                dragging: true
+            }).setView([4.2105, 101.5758], 7); 
 
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
                 attribution: '&copy; OpenStreetMap contributors'
@@ -492,8 +493,10 @@
             updateResults();
 
             // Ensure map renders correctly after initialization
-            setTimeout(() => map.invalidateSize(), 1500);
-            }
+            setTimeout(function() {
+                map.invalidateSize();
+            }, 100);
+        }
 
         function addMarkersToMap(projectList) {
             if (window.markerClusterGroup) {
@@ -501,10 +504,7 @@
             }
             
             window.markerClusterGroup = L.markerClusterGroup({
-                maxClusterRadius: 400,
-                disableClusteringAtZoom: 9,
-                spiderfyOnMaxZoom: true,
-                showCoverageOnHover: false
+                maxClusterRadius: 400
             });
 
             const locationFilter = document.getElementById('locationFilter').value;
@@ -524,7 +524,7 @@
         }
 
         function createPopupContent(project, location) {
-            return `
+            return 
                 <div class="popup-content">
                     <div class="popup-title">${project.title}</div>
                     <div class="popup-details">
@@ -535,7 +535,7 @@
                         View Story Map
                     </a>
                 </div>
-            `;
+            ;
         }
 
         function populateFilters() {
@@ -586,13 +586,13 @@
             filteredProjects.forEach(project => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
-                card.innerHTML = `
+                card.innerHTML = 
                     <div class="project-title">${project.title}</div>
                     <div class="project-details">
                         ${project.practiceAreas.join(' | ')}<br>
                         ${project.locations.map(l => l.name).join(' | ')}
                     </div>
-                `;
+                ;
                 
                 card.onclick = () => {
                     window.open(project.storyMapUrl, '_blank');
@@ -611,13 +611,13 @@
             filteredProjects.forEach(project => {
                 const card = document.createElement('div');
                 card.className = 'project-card';
-                card.innerHTML = `
+                card.innerHTML = 
                     <div class="project-title">${project.title}</div>
                     <div class="project-details">
                         ${project.practiceAreas.join(' | ')}<br>
                         ${project.locations.map(l => l.name).join(' | ')}
                     </div>
-                `;
+                ;
                 
                 card.onclick = () => {
                     window.open(project.storyMapUrl, '_blank');
@@ -630,9 +630,7 @@
         document.getElementById('analysisFilter').addEventListener('change', applyFilters);
         document.getElementById('locationFilter').addEventListener('change', applyFilters);
 
-        window.onload = () => {
-            setTimeout(initMap, 600);
-        };
+        window.onload = initMap;
         
         window.addEventListener('resize', function() {
             if (map) {
